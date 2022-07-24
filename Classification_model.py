@@ -1,6 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
-
+import lightgbm as lgb
 import tensorflow as tf
 from tensorflow import keras
 
@@ -46,3 +44,30 @@ def LSTM(VOCABSIZE, EMBEDDING_DIM, MAX_SEN_LENGTH):
                   metrics=['accuracy', keras.metrics.AUC(), tf.keras.metrics.Precision(), tf.keras.metrics.Recall()])
 
     return model
+
+
+# our LGBM classification model
+def LGBM(X_train, y_train, es):
+    dtrain = lgb.Dataset(X_train[100:], label=y_train[100:])
+    dval = lgb.Dataset(X_train[:100], label=y_train[:100])
+
+    lgb_clf = lgb
+    es_lgbm = lgb.early_stopping(es)
+
+    gbm = lgb_clf.train(
+        params={
+            'lambda_l1': 0.296,
+            'learning_rate': 0.177,
+            # 'objective': "binary",
+            'objective': "regression",
+            'metric': "binary_logloss",
+            'num_leaves': 64,
+            'max_depth': 74
+        },
+        train_set=dtrain,
+        valid_sets=[dval],
+        num_boost_round=10000,
+        callbacks=[es_lgbm]
+    )
+
+    return gbm

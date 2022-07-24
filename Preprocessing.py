@@ -1,20 +1,7 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-import tensorflow as tf
 from collections import Counter
-import matplotlib.pyplot as plt
-from tensorflow import keras
-import pandas as pd
 from keras.preprocessing.sequence import pad_sequences
 from keras.preprocessing.text import Tokenizer
-import sklearn
-import numpy as np
-from nltk.corpus import stopwords
-from keras.callbacks import EarlyStopping
-from nltk import word_tokenize
 from sklearn.utils import shuffle
-import sys
 
 
 # this function help remove stop words
@@ -55,6 +42,8 @@ def prepare_dataset(df, df_t, target):
 
     # generate testing data
     sentences_test, y_test = shuffle(sentences, y, random_state=0)
+    # sentences_test = sentences_test[:1200]
+    # y_test = y_test[:1200]
 
     # generate training data
     sentences_train, y_train = shuffle(sentences_t, y_t,  random_state=0)
